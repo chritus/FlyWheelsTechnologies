@@ -1,43 +1,23 @@
-// document.addEventListener('DOMContentLoaded', () => {
-//     const menuToggle = document.querySelector('.menu-toggle');
-//     const navMenu = document.querySelector('.nav-menu');
-
-//     menuToggle.addEventListener('click', () => {
-//         navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-        
-//         // Toggle hamburger menu animation
-//         menuToggle.classList.toggle('active');
-//     });
-
-//     // Close menu when clicking outside
-//     document.addEventListener('click', (event) => {
-//         const isClickInsideMenu = navMenu.contains(event.target);
-//         const isClickOnToggle = menuToggle.contains(event.target);
-        
-//         if (!isClickInsideMenu && !isClickOnToggle && window.innerWidth <= 768) {
-//             navMenu.style.display = 'none';
-//             menuToggle.classList.remove('active');
-//         }
-//     });
-
-//     // Adjust menu on window resize
-//     window.addEventListener('resize', () => {
-//         if (window.innerWidth > 768) {
-//             navMenu.style.display = 'flex';
-//         } else {
-//             navMenu.style.display = 'none';
-//         }
-//     });
-// });
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Existing menu toggle code...
+    // Menu toggle functionality
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
 
-    menuToggle.addEventListener('click', () => {
+    menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent document click from firing immediately
         navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
         menuToggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (event) => {
+        const isClickInsideMenu = navMenu.contains(event.target);
+        const isClickOnToggle = menuToggle.contains(event.target);
+        
+        if (!isClickInsideMenu && !isClickOnToggle && window.innerWidth <= 768) {
+            navMenu.style.display = 'none';
+            menuToggle.classList.remove('active');
+        }
     });
 
     // Scroll-triggered animations
@@ -53,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                observer.unobserve(entry.target);
+                // Don't unobserve to allow re-triggering animation when scrolling back up
             }
         });
     }, observerOptions);
@@ -63,33 +43,70 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(element);
     });
 
-    // Parallax-like effect for hero background
+    // Modified parallax effect - disabled on mobile for better performance
     const heroBackground = document.querySelector('.image-hero img');
     
-    window.addEventListener('scroll', () => {
-        const scrollPosition = window.pageYOffset;
-        heroBackground.style.transform = `translateY(${scrollPosition * 0.5}px)`;
-    });
+    function handleParallax() {
+        if (window.innerWidth > 768) {
+            const scrollPosition = window.pageYOffset;
+            heroBackground.style.transform = `translateY(${scrollPosition * 0.3}px)`;
+        } else {
+            // Reset transform on mobile
+            heroBackground.style.transform = 'none';
+        }
+    }
+    
+    window.addEventListener('scroll', handleParallax);
 
     // Newsletter Signup Animation
     const newsletterForm = document.querySelector('.newsletter-signup');
-    newsletterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const button = newsletterForm.querySelector('button');
-        button.textContent = 'Thank You!';
-        button.style.backgroundColor = '#2ecc71';
-        setTimeout(() => {
-            button.textContent = 'Subscribe';
-            button.style.backgroundColor = '#3498db';
-        }, 2000);
-    });
+    if (newsletterForm) {
+        newsletterForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const emailInput = newsletterForm.querySelector('input[type="email"]');
+            const button = newsletterForm.querySelector('button');
+            
+            if (emailInput.value.trim() !== '') {
+                button.textContent = 'Thank You!';
+                button.style.backgroundColor = '#2ecc71';
+                setTimeout(() => {
+                    button.textContent = 'Subscribe';
+                    button.style.backgroundColor = '#3498db';
+                    emailInput.value = '';
+                }, 2000);
+            }
+        });
+    }
 
-    // Adjust menu on window resize
-    window.addEventListener('resize', () => {
+    // Handle window resize for responsive menu
+    function handleResize() {
         if (window.innerWidth > 768) {
             navMenu.style.display = 'flex';
-        } else {
+        } else if (!menuToggle.classList.contains('active')) {
             navMenu.style.display = 'none';
         }
-    });
+    }
+    
+    window.addEventListener('resize', handleResize);
+    
+    // Initialize proper display state on page load
+    handleResize();
+    
+    // Add active menu toggle animation styles if not already in CSS
+    if (!document.querySelector('#menu-toggle-style')) {
+        const style = document.createElement('style');
+        style.id = 'menu-toggle-style';
+        style.textContent = `
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: rotate(-45deg) translate(-5px, 6px);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: rotate(45deg) translate(-5px, -6px);
+            }
+        `;
+        document.head.appendChild(style);
+    }
 });

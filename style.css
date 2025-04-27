@@ -668,3 +668,174 @@ body {
     background-size: 200% 200%;
     animation: gradientFlow 15s ease infinite;
 }
+
+
+
+/* Mobile Menu Animation */
+.menu-toggle.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+.menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Fix for mobile hero content positioning */
+.hero-content {
+    position: relative;
+    top: 0;
+    left: 0;
+    transform: none;
+    color: rgb(53, 53, 53);
+    max-width: 600px;
+    padding: 80px 20px 50px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    margin: 120px auto 40px; /* Better positioning for mobile */
+}
+
+@media screen and (min-width: 769px) {
+    .hero-content {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        margin-top: 0;
+    }
+}
+
+/* Fixed navmenu mobile display */
+@media screen and (max-width: 768px) {
+    .navbar {
+        background: rgba(255, 255, 255, 0.9); /* Increased opacity for better text contrast */
+    }
+    
+    .nav-menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .list {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        margin-right: 0;
+    }
+    
+    .list li {
+        margin: 10px 0;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .list li a {
+        display: block;
+        padding: 8px 0;
+    }
+    
+    .nav-actions {
+        margin-top: 15px;
+    }
+    
+    /* Fix for service grid on mobile */
+    .hero-content1 {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    /* Fix for why-choose grid on mobile */
+    .why-choose {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    /* Fix for better-business grid on mobile */
+    .better-business {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Extra small device fixes */
+@media screen and (max-width: 480px) {
+    .why-choose {
+        grid-template-columns: 1fr;
+    }
+    
+    .what-clients {
+        grid-template-columns: 1fr;
+    }
+    
+    .better-business {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .hero-content {
+        margin-top: 80px;
+        padding: 40px 15px 30px;
+    }
+    
+    .next, .next_1 {
+        font-size: 1.8rem;
+    }
+    
+    /* Make sure image background isn't fixed on mobile */
+    .image-hero img {
+        position: absolute;
+    }
+}
+
+/* Fix background image on mobile */
+@media screen and (max-width: 768px) {
+    .image-hero img {
+        position: absolute; /* Not fixed on mobile */
+    }
+}
+
+/* Fix for Grid Layout Responsiveness */
+.containers, .box, .box1, .box3 {
+    width: 100%;
+}
+
+/* Improved touch targets for mobile */
+.nav-menu .list li a,
+.loginButton,
+.schedule,
+.social-icon {
+    padding: 10px;
+    min-height: 44px;
+    min-width: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Force footer to be responsive */
+.footer-bottom {
+    flex-direction: column;
+    gap: 15px;
+}
+
+@media screen and (min-width: 769px) {
+    .footer-bottom {
+        flex-direction: row;
+    }
+}
